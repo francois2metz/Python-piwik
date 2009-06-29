@@ -12,14 +12,22 @@ setup(
     
     description='Access Piwik in python',
     
-    author='Francois de Metz',
+    author='François de Metz',
     author_email='francois@2metz.fr',
-    url='http://forge.2metz.fr/p/python-piwik',
+    url='http://forge.2metz.fr/p/python-piwik/',
     
     packages = find_packages(),
 
     extras_require = {
         'django':  ["Django>=1.0"],
-    }
+    },
+
+    classifiers = [
+        'Framework :: Django',
+        'Operating System :: OS Independent',
+        'Topic :: Internet :: Log Analysis',
+        'License :: OSI Approved :: BSD License'
+    ],
+    
 
 )
