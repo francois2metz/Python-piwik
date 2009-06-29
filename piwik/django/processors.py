@@ -12,6 +12,8 @@ PIWIK_CACHE = {}
 def piwik_processor(request):
     current_site = Site.objects.get_current()
     piwik_site = PiwikSite.objects.filter(site=current_site.id)
+    if (len(piwik_site) == 0):
+        return {}
     id_piwik = piwik_site[0].id_site
     try:
         javascript = PIWIK_CACHE[id_piwik]
