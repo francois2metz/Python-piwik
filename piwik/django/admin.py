@@ -29,5 +29,6 @@ class PiwikSiteForm(forms.ModelForm):
 
 class PiwikSitesAdmin(admin.ModelAdmin):
     form = PiwikSiteForm
+    list_display = ('id_site', 'site')
     
 admin.site.register(PiwikSite, PiwikSitesAdmin)
