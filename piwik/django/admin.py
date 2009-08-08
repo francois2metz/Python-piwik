@@ -11,7 +11,17 @@ from django.conf import settings
 
 class PiwikWidget(Select):
     def getPiwikSites(self):
-        piwik = PiwikAPI(settings.PIWIK_URL, settings.PIWIK_TOKEN)
+        try:
+            url = settings.PIWIK_URL
+        except AttributeError:
+            from django.core.exceptions import ImproperlyConfigured
+            raise ImproperlyConfigured("please set PIWIK_URL in your settings.")
+        try:
+            token = settings.PIWIK_TOKEN
+        except AttributeError:
+            from django.core.exceptions import ImproperlyConfigured
+            raise ImproperlyConfigured("please set PIWIK_TOKEN in your settings.")
+        piwik = PiwikAPI(url, token)
         sites = piwik.getAllSites()
         choices = []
         for index in sites:
