@@ -2,10 +2,7 @@
 import urllib
 import httplib
 import urlparse
-try:
-    import simplejson
-except ImportError:
-    from django.utils import simplejson
+import simplejson
 
 class PiwikAPI:
     def __init__(self, url, token_auth):
@@ -14,6 +11,7 @@ class PiwikAPI:
 
         (scheme, netloc, path, query, fragment) = urlparse.urlsplit(self.url)
         self.host = netloc
+        
     def call(self, method, params = {}, format = 'json'):
         args = {'module' : 'API',
                 'method' : method,
@@ -28,11 +26,13 @@ class PiwikAPI:
             data = result.read()
         conn.close()
         return data
+    
     def getAllSites(self):
         result = self.call('SitesManager.getAllSitesId')
         if result:
             return simplejson.loads(result)
         return None
+    
     def getSiteFromId(self, id):
         result = self.call('SitesManager.getSiteFromId', params = {'idSite' : id})
         if result:
@@ -41,6 +41,7 @@ class PiwikAPI:
                 raise json['message']
             return json
         return None
+    
     def getJavascriptTag(self, id, piwikUrl = '', actionName = ''):
         result = self.call('SitesManager.getJavascriptTag', params = {'idSite' : id})
         if result:
