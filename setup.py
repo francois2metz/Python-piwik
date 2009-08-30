@@ -8,7 +8,7 @@ except ImportError:
 
 setup(
     name='piwik',
-    version='0.2',
+    version='0.3',
     
     description='Access Piwik in python',
     
@@ -18,9 +18,10 @@ setup(
     
     packages = find_packages(),
 
-    require = {
+    
+    install_requires = [
         'simplejson'
-    },
+    ],
     extras_require = {
         'django':  ["Django>=1.0"],
     },
