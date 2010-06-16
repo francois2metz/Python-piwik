@@ -28,7 +28,7 @@ class PiwikAPI:
         return data
     
     def getAllSites(self):
-        result = self.call('SitesManager.getAllSitesId')
+        result = self.call('SitesManager.getSitesWithAtLeastViewAccess')
         if result:
             return simplejson.loads(result)
         return None

@@ -24,10 +24,9 @@ class PiwikWidget(Select):
         piwik = PiwikAPI(url, token)
         sites = piwik.getAllSites()
         choices = []
-        for index in sites:
-            id = int(index[0])
-            site = piwik.getSiteFromId(id)
-            choices.append((id, '%d - %s' % (id, site[0]["name"])))
+        for site in sites:
+            site_id = int(site["idsite"])
+            choices.append((site_id, '%d - %s' % (site_id, site["name"])))
         return tuple(choices)
     def render(self, name, value, attrs=None, choices=()):
         return super(PiwikWidget, self).render(name, value, attrs=attrs, choices=self.getPiwikSites())
