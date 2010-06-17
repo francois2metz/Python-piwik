@@ -1,0 +1,36 @@
+{% extends "admin/change_list.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+        <a href="../../../">{% trans "Home" %}</a> &rsaquo;
+        <a href="../../">{% trans "Piwik" %}</a> &rsaquo;
+        {% trans "Stats" %}
+    </div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+<div id="changelist" class="module filtered">
+    <div id="changelist-filter">
+        <h2>{% trans 'Show' %}</h2>
+        <h3>{% trans 'Period' %}</h3>
+        <ul>
+            <li{% if period == 'day' %} class="selected"{% endif %}><a href="?period=day">{% trans 'Day' %}</a></li>
+            <li{% if period == 'week' %} class="selected"{% endif %}><a href="?period=week">{% trans 'Week' %}</a></li>
+            <li{% if period == 'month' %} class="selected"{% endif %}><a href="?period=month">{% trans 'Month' %}</a></li>
+            <li{% if period == 'year' %} class="selected"{% endif %}><a href="?period=year">{% trans 'Year' %}</a></li>
+        </ul>
+        <h3>{% trans 'More' %}</h3>
+         <ul>
+            <li><a href="{{piwik_url}}">Stats in Piwik</a></li>
+         </ul>
+    </div>
+    <div>
+    {% autoescape off %}
+    {{stats}}
+    {% endautoescape %}
+    </div>
+</div>
+</div>
+{% endblock %}

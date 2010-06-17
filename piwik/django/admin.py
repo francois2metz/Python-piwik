@@ -3,15 +3,14 @@ from django.contrib import admin
 from django.db import models
 from django.forms.fields import Select
 from django import forms
+from django.template import RequestContext
+from django.shortcuts import render_to_response
+from django.utils.functional import update_wrapper
 
 from piwik import PiwikAPI
 from piwik.django.models import PiwikSite
 
 from django.conf import settings
-
-from django.http import HttpResponse
-
-from django.utils.functional import update_wrapper
 
 def get_piwik_settings():
     try:
@@ -48,33 +47,40 @@ class PiwikSiteForm(forms.ModelForm):
 class PiwikSitesAdmin(admin.ModelAdmin):
     form = PiwikSiteForm
     list_display = ('id_site', 'site', 'view_stats')
-    
+
     def view_stats(self, site):
         from django.core.urlresolvers import reverse
-        link = reverse('admin:admin_piwik_stats', kwargs={'id_site':site.id_site})
+        link = reverse('admin:admin_piwik_stats', kwargs={'id_site_piwik':site.id_site})
         return '<a href="%s">Stats</a>' % link;
 
     view_stats.allow_tags = True
 
     def get_urls(self):
         from django.conf.urls.defaults import patterns, url
-        
+
         def wrap(view):
             def wrapper(*args, **kwargs):
                 return self.admin_site.admin_view(view)(*args, **kwargs)
             return update_wrapper(wrapper, view)
-        
+
         urls = patterns('',
-            url(r'^(?P<id_site>[\d]+)/stats/$', wrap(self.stats), name='admin_piwik_stats'),
+            url(r'^(?P<id_site_piwik>[\d]+)/stats/$', wrap(self.stats), name='admin_piwik_stats'),
         )
         return urls + super(PiwikSitesAdmin, self).get_urls()
 
-    def stats(self, request, id_site=None):
+    def stats(self, request, id_site_piwik=None):
         [url, token] = get_piwik_settings()
         piwik = PiwikAPI(url, token)
-        visits = piwik.call('VisitsSummary.get', params={'idSite': id_site,
-                                                         'period': 'day',
+        period = request.GET.get('period', 'day')
+        site = PiwikSite.objects.get(id_site=id_site_piwik)
+        title = 'Stats: %s' % site.site.name
+        visits = piwik.call('VisitsSummary.get', params={'idSite': id_site_piwik,
+                                                         'period': period,
                                                          'date': 'yesterday'}, format='Html')
-        return HttpResponse(visits)
-        
+        return render_to_response('admin/piwik/stats.html', {'stats': visits,
+                                                             'period': period,
+                                                             'title': title,
+                                                             'piwik_url': url},
+                                  RequestContext(request))
+
 admin.site.register(PiwikSite, PiwikSitesAdmin)
