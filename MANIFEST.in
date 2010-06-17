@@ -1,2 +1,3 @@
 include LICENSE
-recursive-include piwik/django/templates *
+include README.rst
+recursive-include django/templates *
