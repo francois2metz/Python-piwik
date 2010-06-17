@@ -13,7 +13,8 @@ setup(
     
     license='BSD',
     packages = find_packages(),
-
+    data_files= [('templates', ['django/templates/admin/piwik/*.html'])],
+    
     install_requires = [
         'simplejson'
     ],
