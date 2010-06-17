@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='piwik',
-    version='0.3',
+    version='0.4',
     description='Access Piwik in python',
     long_description=open('README.rst').read(),
 
