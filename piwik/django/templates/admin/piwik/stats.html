@@ -27,9 +27,20 @@
          </ul>
     </div>
     <div>
-    {% autoescape off %}
-    {{stats}}
-    {% endautoescape %}
+        <h2>{% trans 'Visits summary' %}</h2>
+        {% autoescape off %}
+        {{visitssummary}}
+        {% endautoescape %}
+        <br />
+        <h2>{% trans 'User Country' %}</h2>
+        {% autoescape off %}
+        {{usercountry}}
+        {% endautoescape %}
+        <br />
+        <h2>{% trans 'Referrer' %}</h2>
+        {% autoescape off %}
+        {{referrer}}
+        {% endautoescape %}
     </div>
 </div>
 </div>

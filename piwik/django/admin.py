@@ -77,7 +77,15 @@ class PiwikSitesAdmin(admin.ModelAdmin):
         visits = piwik.call('VisitsSummary.get', params={'idSite': id_site_piwik,
                                                          'period': period,
                                                          'date': 'yesterday'}, format='Html')
-        return render_to_response('admin/piwik/stats.html', {'stats': visits,
+        usercountry = piwik.call('UserCountry.getCountry', params={'idSite': id_site_piwik,
+                                                                   'period': period,
+                                                                   'date': 'yesterday'}, format='Html')
+        referrer = piwik.call('Referers.getRefererType', params={'idSite': id_site_piwik,
+                                                                 'period': period,
+                                                                'date': 'yesterday'}, format='Html')
+        return render_to_response('admin/piwik/stats.html', {'visitssummary': visits,
+                                                             'usercountry': usercountry,
+                                                             'referrer' : referrer,
                                                              'period': period,
                                                              'title': title,
                                                              'piwik_url': url},
