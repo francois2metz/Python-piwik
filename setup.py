@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
 
+VERSION = open('VERSION', 'r').read().replace('\n', '')
+
 setup(
     name='piwik',
-    version='0.4',
+    version=VERSION,
     description='Access Piwik in python',
     long_description=open('README.rst').read(),
 
