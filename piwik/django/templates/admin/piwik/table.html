@@ -1,0 +1,20 @@
+<table>
+    <thead>
+        {% for t in metadata %}
+        <th>{{ t }}</th>
+        {% endfor %}
+    </thead>
+    <tbody>
+        {% for row in table %}
+        <tr>
+            {% for t in row %}
+            {% if t.0 == 'logo' %}
+            <td><img src="{{ t.1 }}" /></td>
+            {% else %}
+            <td>{{ t.1 }}</th>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -1,5 +1,6 @@
 {% extends "admin/change_list.html" %}
 {% load i18n %}
+{% load piwik_json_tables %}
 
 {% block breadcrumbs %}
     <div class="breadcrumbs">
@@ -28,19 +29,13 @@
     </div>
     <div>
         <h2>{% trans 'Visits summary' %}</h2>
-        {% autoescape off %}
-        {{visitssummary}}
-        {% endautoescape %}
+        {% piwik_json_tables visitssummary visitssummary_metadata %}
         <br />
         <h2>{% trans 'User Country' %}</h2>
-        {% autoescape off %}
-        {{usercountry}}
-        {% endautoescape %}
+        {% piwik_json_tables usercountry usercountry_metadata %}
         <br />
-        <h2>{% trans 'Referrer' %}</h2>
-        {% autoescape off %}
-        {{referrer}}
-        {% endautoescape %}
+        <h2>{% trans 'Referer' %}</h2>
+        {% piwik_json_tables referer referer_metadata %}
     </div>
 </div>
 </div>

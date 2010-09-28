@@ -68,24 +68,30 @@ class PiwikSitesAdmin(admin.ModelAdmin):
         )
         return urls + super(PiwikSitesAdmin, self).get_urls()
 
+    def call_method_with_metadata(self, piwik, id_site_piwik, period, api_module, api_action):
+        data = piwik.call('%s.%s' % (api_module, api_action), params={'idSite': id_site_piwik,
+                                                                      'period': period,
+                                                                      'date': 'yesterday'}, format='json')
+        metadata = piwik.call('API.getMetadata', params={'idSite': id_site_piwik,
+                                                         'apiModule': api_module,
+                                                         'apiAction': api_action}, format='json')
+        return [data, metadata]
+
     def stats(self, request, id_site_piwik=None):
         [url, token] = get_piwik_settings()
         piwik = PiwikAPI(url, token)
         period = request.GET.get('period', 'day')
         site = PiwikSite.objects.get(id_site=id_site_piwik)
         title = 'Stats: %s' % site.site.name
-        visits = piwik.call('VisitsSummary.get', params={'idSite': id_site_piwik,
-                                                         'period': period,
-                                                         'date': 'yesterday'}, format='Html')
-        usercountry = piwik.call('UserCountry.getCountry', params={'idSite': id_site_piwik,
-                                                                   'period': period,
-                                                                   'date': 'yesterday'}, format='Html')
-        referrer = piwik.call('Referers.getRefererType', params={'idSite': id_site_piwik,
-                                                                 'period': period,
-                                                                'date': 'yesterday'}, format='Html')
+        [visits, visits_metadata]           = self.call_method_with_metadata(piwik, id_site_piwik, period, 'VisitsSummary', 'get')
+        [usercountry, usercountry_metadata] = self.call_method_with_metadata(piwik, id_site_piwik, period, 'UserCountry', 'getCountry')
+        [referer, referer_metadata]         = self.call_method_with_metadata(piwik, id_site_piwik, period, 'Referers', 'getRefererType')
         return render_to_response('admin/piwik/stats.html', {'visitssummary': visits,
+                                                             'visitssummary_metadata': visits_metadata,
                                                              'usercountry': usercountry,
-                                                             'referrer' : referrer,
+                                                             'usercountry_metadata': usercountry_metadata,
+                                                             'referer' : referer,
+                                                             'referer_metadata' : referer_metadata,
                                                              'period': period,
                                                              'title': title,
                                                              'piwik_url': url},

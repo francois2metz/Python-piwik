@@ -11,7 +11,7 @@ class PiwikAPI:
 
         (scheme, netloc, path, query, fragment) = urlparse.urlsplit(self.url)
         self.host = netloc
-        
+
     def call(self, method, params = {}, format = 'json'):
         args = {'module' : 'API',
                 'method' : method,
@@ -25,25 +25,18 @@ class PiwikAPI:
         if result.status == 200:
             data = result.read()
         conn.close()
+        if data is not None and format == 'json':
+            return simplejson.loads(data)
         return data
-    
+
     def getAllSites(self):
-        result = self.call('SitesManager.getSitesWithAtLeastViewAccess')
-        if result:
-            return simplejson.loads(result)
-        return None
-    
+        return self.call('SitesManager.getSitesWithAtLeastViewAccess')
+
     def getSiteFromId(self, id):
-        result = self.call('SitesManager.getSiteFromId', params = {'idSite' : id})
-        if result:
-            json = simplejson.loads(result)
-            if hasattr(json, 'result'):
-                raise json['message']
-            return json
-        return None
-    
+        return self.call('SitesManager.getSiteFromId', params = {'idSite' : id})
+
     def getJavascriptTag(self, id, piwikUrl = '', actionName = ''):
         result = self.call('SitesManager.getJavascriptTag', params = {'idSite' : id})
         if result:
-            return simplejson.loads(result)['value']
+            return result['value']
         return None
