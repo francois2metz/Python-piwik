@@ -40,7 +40,7 @@ master_doc = 'index'
 project = u'Python Piwik'
 copyright = u'2010, François de Metz'
 
-VERSION = open('.VERSION', 'r').read().replace('\n', '')
+VERSION = open('../VERSION', 'r').read().replace('\n', '')
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
